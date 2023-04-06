@@ -1,0 +1,111 @@
+diff -uNr debootstrap/functions debootstrap.mod/functions
+--- debootstrap/functions	2022-10-19 01:48:32.000000000 +0300
++++ debootstrap.mod/functions	2023-01-05 11:26:45.296698565 +0200
+@@ -231,6 +231,9 @@
+ }
+ 
+ detect_container () {
++	#termux
++	return
++
+ 	if [ "$container" = lxc ]; then
+ 		CONTAINER="lxc"
+ 	elif grep -qs container=lxc-libvirt /proc/1/environ; then
+@@ -978,7 +981,7 @@
+ extract_dpkg_deb_data () {
+ 	local pkg="$1"
+ 
+-	dpkg-deb --fsys-tarfile "$pkg" | tar $EXTRACT_DEB_TAR_OPTIONS -xf - || error 1 FILEEXIST "Tried to extract package, but file already exists. Exit..."
++	dpkg-deb --fsys-tarfile "$pkg" | proot --link2symlink tar $EXTRACT_DEB_TAR_OPTIONS -xf - || error 1 FILEEXIST "Tried to extract package, but file already exists. Exit..."
+ }
+ 
+ # Raw .deb extractors
+@@ -1020,7 +1023,7 @@
+ 	esac
+ 
+ 	if in_path "$cat_cmd"; then
+-		ar -p "$pkg" "$tarball" | "$cat_cmd" | tar $EXTRACT_DEB_TAR_OPTIONS -xf -
++		ar -p "$pkg" "$tarball" | "$cat_cmd" | proot --link2symlink tar $EXTRACT_DEB_TAR_OPTIONS -xf -
+ 	else
+ 		error 1 UNPACKCMDUNVL "Extracting %s requires the %s command, which is not available" "$pkg" "$cat_cmd"
+ 	fi
+@@ -1077,7 +1080,7 @@
+ ); }
+ 
+ in_target_nofail () {
+-	if ! PATH=/sbin:/usr/sbin:/bin:/usr/bin eval "$CHROOT_CMD \"\$@\"" 2>/dev/null; then
++	if ! PATH=$PATH:/sbin:/usr/sbin:/bin:/usr/bin $CHROOT_CMD "$@" 2>/dev/null; then
+ 		true
+ 	fi
+ 	return 0
+@@ -1089,7 +1092,7 @@
+ 	msg="$2"
+ 	arg="$3"
+ 	shift; shift; shift
+-	if ! PATH=/sbin:/usr/sbin:/bin:/usr/bin eval "$CHROOT_CMD \"\$@\""; then
++	if ! PATH=$PATH:/sbin:/usr/sbin:/bin:/usr/bin $CHROOT_CMD "$@"; then
+ 		warning "$code" "$msg" "$arg"
+ 		# Try to point user at actual failing package.
+ 		msg="See %s for details"
+@@ -1145,13 +1148,15 @@
+ setup_etc () {
+ 	mkdir -p "$TARGET/etc"
+ 
+-	conditional_cp /etc/resolv.conf "$TARGET"
+-	conditional_cp /etc/hostname "$TARGET"
++	conditional_cp @TERMUX_PREFIX@/etc/resolv.conf "$TARGET"
++	conditional_cp @TERMUX_PREFIX@/etc/hostname "$TARGET"
+ }
+ 
+ UMOUNT_DIRS=
+ 
+ umount_exit_function () {
++	return
++
+ 	local realdir dir
+ 	for dir in $UMOUNT_DIRS; do
+ 		realdir="$(in_target_nofail readlink -f "$dir")"
+@@ -1176,6 +1181,8 @@
+ }
+ 
+ setup_proc () {
++	return
++
+ 	case "$HOST_OS" in
+ 	    *freebsd*)
+ 		umount_on_exit /dev
+@@ -1255,7 +1262,6 @@
+ 			return 0
+ 		fi
+ 
+-		setup_devices_simple
+ 		;;
+ 	esac
+ }
+@@ -1280,6 +1286,8 @@
+ 
+ # Create a device node if it does not exist. By default, the mode is 666.
+ mknod_if_needed () {
++	return
++
+ 	local device type major minor mode
+ 	device="$1"
+ 	type="$2"
+@@ -1294,6 +1302,8 @@
+ 
+ 
+ setup_devices_simple () {
++	return
++
+ 	# The list of devices that can be created in a container comes from
+ 	# src/core/cgroup.c in the systemd source tree.
+ 	mknod_if_needed "$TARGET/dev/null"        c 1 3
+@@ -1325,6 +1335,8 @@
+ }
+ 
+ setup_devices_bind () {
++	return
++
+ 	local device
+ 	mount -t tmpfs nodev "$TARGET/dev"
+ 	umount_on_exit /dev

@@ -1,0 +1,11 @@
+TERMUX_PKG_HOMEPAGE=https://gitlab.gnome.org/GNOME/adwaita-icon-theme
+TERMUX_PKG_DESCRIPTION="GNOME standard icons"
+TERMUX_PKG_LICENSE="LGPL-3.0"
+TERMUX_PKG_MAINTAINER="@termux"
+_MAJOR_VERSION=44
+TERMUX_PKG_VERSION=${_MAJOR_VERSION}.0
+TERMUX_PKG_SRCURL=https://download.gnome.org/sources/adwaita-icon-theme/${_MAJOR_VERSION}/adwaita-icon-theme-${TERMUX_PKG_VERSION}.tar.xz
+TERMUX_PKG_SHA256=4889c5601bbfecd25d80ba342209d0a936dcf691ee56bd6eca4cde361f1a664c
+TERMUX_PKG_PLATFORM_INDEPENDENT=true
+TERMUX_PKG_DEPENDS="hicolor-icon-theme, librsvg"
+TERMUX_PKG_RM_AFTER_INSTALL="share/icons/Adwaita/icon-theme.cache"

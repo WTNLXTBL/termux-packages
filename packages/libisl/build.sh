@@ -1,0 +1,10 @@
+TERMUX_PKG_HOMEPAGE=https://libisl.sourceforge.io/
+TERMUX_PKG_DESCRIPTION="Library for manipulating sets and relations of integer points bounded by linear constraints"
+TERMUX_PKG_LICENSE="MIT"
+TERMUX_PKG_MAINTAINER="@termux"
+TERMUX_PKG_VERSION=0.25
+TERMUX_PKG_SRCURL=http://archive.ubuntu.com/ubuntu/pool/main/i/isl/isl_${TERMUX_PKG_VERSION}.orig.tar.xz
+TERMUX_PKG_SHA256=be7b210647ccadf90a2f0b000fca11a4d40546374a850db67adb32fad4b230d9
+TERMUX_PKG_DEPENDS="libgmp"
+TERMUX_PKG_BREAKS="libisl-dev"
+TERMUX_PKG_REPLACES="libisl-dev"

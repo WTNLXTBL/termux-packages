@@ -1,0 +1,15 @@
+TERMUX_PKG_HOMEPAGE=https://xiph.org/flac/
+TERMUX_PKG_DESCRIPTION="FLAC (Free Lossless Audio Codec) library"
+TERMUX_PKG_LICENSE="GPL-2.0, LGPL-2.1, BSD 3-Clause"
+TERMUX_PKG_LICENSE_FILE="COPYING.GPL, COPYING.LGPL, COPYING.Xiph"
+TERMUX_PKG_MAINTAINER="@termux"
+TERMUX_PKG_VERSION=1.4.2
+TERMUX_PKG_SRCURL=https://downloads.xiph.org/releases/flac/flac-${TERMUX_PKG_VERSION}.tar.xz
+TERMUX_PKG_SHA256=e322d58a1f48d23d9dd38f432672865f6f79e73a6f9cc5a5f57fcaa83eb5a8e4
+TERMUX_PKG_DEPENDS="libc++, libogg"
+TERMUX_PKG_BREAKS="libflac-dev"
+TERMUX_PKG_REPLACES="libflac-dev"
+TERMUX_PKG_RM_AFTER_INSTALL="
+share/doc/flac/FLAC.tag
+share/doc/flac/api/
+"

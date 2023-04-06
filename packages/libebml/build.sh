@@ -1,0 +1,11 @@
+TERMUX_PKG_HOMEPAGE=https://github.com/Matroska-Org/libebml
+TERMUX_PKG_DESCRIPTION="Extensible Binary Meta Language library"
+TERMUX_PKG_LICENSE="LGPL-2.1"
+TERMUX_PKG_MAINTAINER="@termux"
+TERMUX_PKG_VERSION=1.4.4
+TERMUX_PKG_SRCURL=https://github.com/Matroska-Org/libebml/archive/release-$TERMUX_PKG_VERSION.tar.gz
+TERMUX_PKG_SHA256=3b30d89a5699fef4bdf5b4d7de7a1c94d9be47fababf9caca59250282f051283
+TERMUX_PKG_DEPENDS="libc++"
+TERMUX_PKG_EXTRA_CONFIGURE_ARGS="
+-DBUILD_SHARED_LIBS=ON
+"
