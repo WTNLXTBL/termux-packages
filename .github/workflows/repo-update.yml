@@ -29,7 +29,7 @@ jobs:
         
         # Edit
         info "Edit"
-        cd termux-packages-pacman
+        cd packages
         rm -fr */
         cd ../termux-packages
         cp -r * ../packages
@@ -85,7 +85,7 @@ jobs:
         cd ../packages
         git config --global user.name "github-actions[bot]"
         git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-        git remote set-url origin "https://WTNLXTBL:${{ secrets.PAT }}@github.com/WTNLXTBL/termux-packages-pacman.git"
+        git remote set-url origin "https://WTNLXTBL:${{ secrets.PAT }}@github.com/WTNLXTBL/termux-packages.git"
         commit "Update system repo"
         git add .
         git reset packages root-packages x11-packages README.md
