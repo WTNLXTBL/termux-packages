@@ -2,7 +2,8 @@ TERMUX_PKG_HOMEPAGE=https://emscripten.org
 TERMUX_PKG_DESCRIPTION="Emscripten: An LLVM-to-WebAssembly Compiler"
 TERMUX_PKG_LICENSE="MIT"
 TERMUX_PKG_MAINTAINER="@truboxl"
-TERMUX_PKG_VERSION="3.1.35"
+TERMUX_PKG_VERSION="3.1.36"
+TERMUX_PKG_REVISION=1
 TERMUX_PKG_SRCURL=git+https://github.com/emscripten-core/emscripten
 TERMUX_PKG_GIT_BRANCH=${TERMUX_PKG_VERSION}
 TERMUX_PKG_PLATFORM_INDEPENDENT=true
@@ -10,7 +11,6 @@ TERMUX_PKG_RECOMMENDS="emscripten-llvm, emscripten-binaryen, python, nodejs-lts 
 TERMUX_PKG_HOSTBUILD=true
 TERMUX_PKG_NO_STATICSPLIT=true
 TERMUX_PKG_AUTO_UPDATE=true
-TERMUX_PKG_ENABLE_CLANG16_PORTING=false
 
 # remove files according to emsdk/upstream directory after running
 # ./emsdk install latest
@@ -53,13 +53,13 @@ opt/emscripten/LICENSE
 
 # https://github.com/emscripten-core/emscripten/issues/11362
 # can switch to stable LLVM to save space once above is fixed
-_LLVM_COMMIT=6865cff8ea8b07d9f2385fd92cecb422404f0f35
-_LLVM_TGZ_SHA256=5afc3d005233d751d986df059f1f7ab5863ff1188d5547862b4af829917a7a2f
+_LLVM_COMMIT=5084abbea933b1a510556726a9e226b5ae22f19f
+_LLVM_TGZ_SHA256=085ee6734d5483d4ff29f7ac33f86f4f9e7ac7162131b80547d3f720cc9411d9
 
 # https://github.com/emscripten-core/emscripten/issues/12252
 # upstream says better bundle the right binaryen revision for now
-_BINARYEN_COMMIT=47056c9a00e368969a503209b6b9f5c0bc287058
-_BINARYEN_TGZ_SHA256=2b45fa831b939e785a00a194f2803a61b6a7f544364c6d49e59956ad047f131a
+_BINARYEN_COMMIT=d0621e5820b4ce1b72907f5cdb3c68487ce20c60
+_BINARYEN_TGZ_SHA256=11613d8883d63967a2af632cd346b9054d0712150d6b8cf62df590b476a465fd
 
 # https://github.com/emscripten-core/emsdk/blob/main/emsdk.py
 # https://chromium.googlesource.com/emscripten-releases/+/refs/heads/main/src/build.py
@@ -243,6 +243,8 @@ termux_step_make() {
 		-j "${TERMUX_MAKE_PROCESSES}" \
 		--target install
 
+	local _OLD_LDFLAGS="$LDFLAGS"
+	LDFLAGS="-Wl,-rpath=$TERMUX_PREFIX/opt/emscripten-binaryen/lib $LDFLAGS"
 	cmake \
 		-G Ninja \
 		-S "${TERMUX_PKG_CACHEDIR}/binaryen-${_BINARYEN_COMMIT}" \
@@ -252,6 +254,7 @@ termux_step_make() {
 		--build "${TERMUX_PKG_BUILDDIR}/build-binaryen" \
 		-j "${TERMUX_MAKE_PROCESSES}" \
 		--target install
+	LDFLAGS="$_OLD_LDFLAGS"
 }
 
 termux_step_make_install() {
